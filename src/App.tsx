@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { ApiResponse } from "./model/types";
-
+import { Dialog } from "@headlessui/react";
 function App() {
   const [bookId, setBookId] = useState<number>();
   const [book, setBook] = useState<ApiResponse[]>([]);
   const [selectedBook, setSelectedBook] = useState<ApiResponse>();
   const [loading, setLoading] = useState(true);
+  let [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     fetch("http://127.0.0.1:3000/api/v2/books")
@@ -65,7 +66,10 @@ function App() {
               <p className="text-sm text-slate-400">{book.author.name}</p>
             </div>
           ))}
-          <div className="flex flex-col items-center justify-center border border-indigo-400 w-[200px] h-auto rounded-md p-2 hover:cursor-pointer hover:border-slate-100 transition-all duration-300 hover:-translate-y-1">
+          <div
+            className="flex flex-col items-center justify-center border border-indigo-400 w-[200px] h-auto rounded-md p-2 hover:cursor-pointer hover:border-slate-100 transition-all duration-300 hover:-translate-y-1"
+            onClick={() => setIsOpen(true)}
+          >
             <p className="text-8xl text-center text-gray-400">+</p>
             <p className="text-gray-400">Add Book</p>
           </div>
@@ -112,6 +116,26 @@ function App() {
           </div>
         )}
       </div>
+
+      <Dialog
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        className="relative z-50"
+      >
+        {/* The backdrop, rendered as a fixed sibling to the panel container */}
+        <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+        {/* Full-screen container to center the panel */}
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          {/* The actual dialog panel  */}
+          <Dialog.Panel className="mx-auto max-w-sm rounded bg-white">
+            <Dialog.Title>Add New Book</Dialog.Title>
+            <div>
+              <form action=""></form>
+            </div>
+          </Dialog.Panel>
+        </div>
+      </Dialog>
     </div>
   );
 }
